@@ -1,0 +1,7 @@
+[core]
+	autocrlf = true
+	safecrlf = false
+	longpaths = true
+[user]
+	name = Rostislav Poddorogin
+	email = poddor@mail.ru

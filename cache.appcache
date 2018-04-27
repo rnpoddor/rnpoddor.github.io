@@ -1,13 +1,121 @@
 CACHE MANIFEST
-# 000000000002
+# 1524828157346
 
 # Additional resources to cache
-# https://github.com/oknosoft/metadata.js/pull/180
 CACHE:
 
-# Заголовок и библиотеки
-# ./
+./
 https://fonts.googleapis.com/css?family=Roboto
+/403.html
+/405.html
+/asset-manifest.json
+/dist/dhtmlx.min.js
+/dist/jsdelivr.js
+/dist/jszip.min.js
+/dist/memorystream.js
+/dist/paperjs-deep-diff.min.js
+/dist/pouchdb.load.js
+/dist/pouchdb.load.min.js
+/dist/qrcodejs/index-svg.html
+/dist/qrcodejs/index.html
+/dist/qrcodejs/qrcode.min.js
+/dist/windowbuilder.css
+/dist/windowbuilder.js
+/dist/wnd_debug.js
+/dist/worker.js
+/favicon.ico
+/imgs/about_48.png
+/imgs/align_bottom.png
+/imgs/align_hor.png
+/imgs/align_left.png
+/imgs/align_right.png
+/imgs/align_top.png
+/imgs/align_vert.png
+/imgs/arc1.png
+/imgs/calculate.png
+/imgs/circle.png
+/imgs/close.png
+/imgs/copy.png
+/imgs/cursor-arc-r.png
+/imgs/cursor-cut.png
+/imgs/cursor-lay-impost.png
+/imgs/cursor-pen-freehand.png
+/imgs/cursor-zoom.png
+/imgs/cut.png
+/imgs/events_48.png
+/imgs/fav-md144.png
+/imgs/fav-md32.png
+/imgs/fav-okn144.png
+/imgs/fav-wnd.ico
+/imgs/forms.png
+/imgs/grid.png
+/imgs/icon-arrow-black.png
+/imgs/icon-arrow-white.png
+/imgs/icon-hand.png
+/imgs/icon-pen.png
+/imgs/icss_text.png
+/imgs/layers.png
+/imgs/line.png
+/imgs/new_layer.png
+/imgs/open.png
+/imgs/planned_section.png
+/imgs/points_hover.png
+/imgs/points.png
+/imgs/projects_48.png
+/imgs/ruler_arrow.png
+/imgs/ruler_base.png
+/imgs/ruler_elm.png
+/imgs/ruler_inner.png
+/imgs/ruler_node.png
+/imgs/ruler_outer.png
+/imgs/ruler_pencil.png
+/imgs/ruler_ui.png
+/imgs/save.png
+/imgs/semicircle1.png
+/imgs/semicircle2.png
+/imgs/settings_48.png
+/imgs/splash.gif
+/imgs/square.png
+/imgs/stamp.png
+/imgs/standard_form.png
+/imgs/tb_delete.png
+/imgs/tb_prop_el_b.png
+/imgs/tb_prop_furn_b.png
+/imgs/tb_prop_lay_b.png
+/imgs/tb_redo_dis.png
+/imgs/tb_redo.png
+/imgs/tb_undo_dis.png
+/imgs/tb_undo.png
+/imgs/text.png
+/imgs/trapeze1.png
+/imgs/trapeze2.png
+/imgs/trapeze3.png
+/imgs/trapeze4.png
+/imgs/trapeze5.png
+/imgs/trapeze6.png
+/imgs/trash.gif
+/imgs/triangle1.png
+/imgs/triangle2.png
+/imgs/triangle3.png
+/imgs/v2_48.png
+/index.html
+/manifest.json
+/service-worker.js
+/static/css/main.c79987c2.css
+/static/js/0.0fdb9185.chunk.js
+/static/js/1.51d2f13e.chunk.js
+/static/js/10.8faff246.chunk.js
+/static/js/11.afcb4bb8.chunk.js
+/static/js/12.967af7ce.chunk.js
+/static/js/2.54114635.chunk.js
+/static/js/3.91ed589f.chunk.js
+/static/js/4.94f08ede.chunk.js
+/static/js/5.b48095c4.chunk.js
+/static/js/6.310f898c.chunk.js
+/static/js/7.fe94e4bf.chunk.js
+/static/js/8.cca3f1d9.chunk.js
+/static/js/9.11b5ca53.chunk.js
+/static/js/main.f41ad793.js
 /static/media/fontawesome-webfont.af7ae505.woff2
 
 # All other resources (e.g. sites) require the user to be online.
