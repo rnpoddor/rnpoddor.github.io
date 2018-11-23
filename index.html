@@ -1,43 +1,567 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Управление поведением карты. Пример создания карты с использованием API Яндекс.Карт 2.1.</title>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-	
-    <style>
-        body, html {
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            height: 100%;
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+
+    <style type="text/css">
+
+                  html { height: 100% }
+
+                  body { height: 100%; margin: 0px; padding: 0px }
+
+                  #map { height: 100% }
+
+                </style>
+
+ 
+
+    <script type="text/javascript">
+
+                var index = 1;
+
+                var myMap, route;
+
+                var myPlacemark;
+
+                var clusterer;
+
+                var PointArray = [];
+
+                var noclick = false;
+
+               
+
+                function init(){ 
+
+                               myMap = new ymaps.Map ("map", {
+
+                                               center: [55.75, 37.62],
+
+                                               zoom: 12
+
+                               });
+
+                              
+
+                               myMap.behaviors.disable('dblClickZoom');
+
+                              
+
+                                              
+
+                               /*
+
+                               myMap.events.add('click', function (e) {
+
+                                               if (!noclick) {
+
+                                                               GetObjectCoordPosition(e);
+
+                                                              
+
+                                               }else{
+
+                                                               noclick = false;
+
+                                               }
+
+                               });
+
+                               */                          
+
+                              
+
+                               myMap.events.add('dragend', function (e) {
+
+                                               noclick = true;                                 
+
+                                               document.getElementById('CoordX').value = "0";
+
+                                               document.getElementById('CoordY').value = "0";
+
+                               });
+
+                              
+
+                             
+
+                               // Слушаем клик на карте.
+
+               myMap.events.add('click', function (e) {
+
+              coordPosition = GetObjectCoordPosition(e);
+
+               addMarker(coordPosition);
+
+        });
+
+ 
+
+                               /*
+
+                               // создадим кластеризатор и запретим приближать карту при клике на кластеры
+
+                               clusterer = new ymaps.Clusterer({clusterDisableClickZoom: true, synchAdd: true});
+
+                               myMap.geoObjects.add(clusterer);
+
+                               */
+
+                }
+
+               
+
+                function GetObjectCoordPosition(e){
+
+                               coordPosition = e.get('coords');
+
+                              
+
+                               //alert();
+
+                              
+
+                               document.getElementById('CoordX').value = coordPosition[0].toPrecision(15);
+
+                               document.getElementById('CoordY').value = coordPosition[1].toPrecision(15);
+
+                              
+
+                               return coordPosition;
+
+                }
+
+               
+
+                function setAddressTextByCoordPosition(coordPosition){
+
+                               myGoocoder = ymaps.geocode(coordPosition);
+
+                              
+
+                               myGoocoder.then(function (res) {
+
+                        var firstGeoObject = res.geoObjects.get(0);
+
+                                               var localAddress = firstGeoObject.getAddressLine();
+
+                                              
+
+                                               document.getElementById('SelectedAddress').value = localAddress;
+
+                                                                                             
+
+                        myPlacemark.properties
+
+                            .set({
+
+                                // Формируем строку с данными об объекте.
+
+                                iconContent: [
+
+                                    // Название населенного пункта или вышестоящее административно-территориальное образование.
+
+                                    firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+
+                                    // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+
+                                    firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+
+                                ].filter(Boolean).join(', '),
+
+                                // В качестве контента балуна задаем строку с адресом объекта.
+
+                                balloonContent: firstGeoObject.getAddressLine()
+
+                            });
+
+                    });
+
+                }
+
+               
+
+                function addMarker(coordPosition){
+
+                               if (myPlacemark) {
+
+                                               myPlacemark.geometry.setCoordinates(coordPosition);
+
+                               }
+
+                               else {
+
+                                               myPlacemark = new ymaps.Placemark(coordPosition, {
+
+                                                               // Свойства
+
+                                                               // Текст метки
+
+                                                               iconContent: 'Точка'+index
+
+                                               }, {
+
+                                                               // Опции
+
+                                                               // Иконка метки будет растягиваться под ее контент
+
+                                                               preset: 'islands#blueStretchyIcon'
+
+                                               });
+
+                              
+
+                                               myMap.geoObjects.add(myPlacemark);
+
+                               }
+
+                              
+
+                               setAddressTextByCoordPosition(coordPosition);
+
+                              
+
+                               document.getElementById('CoordX').value = coordPosition[0].toPrecision(15);
+
+                               document.getElementById('CoordY').value = coordPosition[1].toPrecision(15);
+
+                }
+
+ 
+
+    function ShowBalloon(X, Y, bHeader, bBody, bFooter, LetClosing) {
+
+               // новый объект не создаём (разработчики не очень-то рекомендуют это делать, а более 1 баллуна одновременно открыть нельзя)
+
+               myMap.balloon.open([X, Y],
+
+                                               { // спецификация
+
+                                                               contentHeader: bHeader,
+
+                    contentBody: bBody,
+
+                    contentFooter: bFooter
+
+                },
+
+                { // опции (только те, которые требуют явной переустановки)
+
+                    closeButton: LetClosing
+
+                    // писать вообще все опции незачем, полностью см. описание API
+
+                });
+
+          //return myMap.balloon; // для совместимости с общим подходом
+
+    } // конец функции ShowBalloon
+
+                              
+
+                function AddBalloonPoint(X, Y, bHeader, bBody, bFooter, bLetClosing, mPresetType) {
+
+                               // создаём объект-метку с возможностью открытия баллуна
+
+        ballPoint = new ymaps.Placemark([X, Y],
+
+                              { // спецификация
+
+                                              iconContent: bHeader, // а можно и отдельный аргумент
+
+                                                               balloonContentHeader: bHeader,
+
+                    balloonContentBody: bBody,
+
+                    balloonContentFooter: bFooter
+
+                },
+
+                { // опции (только те, которые требуют явной переустановки)
+
+                    closeButton: bLetClosing,
+
+                                              hideIconOnBalloonOpen: true,
+
+                                              hasBalloon: true,
+
+                                              openBalloonOnClick: true,
+
+                              preset: mPresetType // иконка растягивается под контент, нужны именно со словом "Stretchy"
+
+                });
+
+                               myMap.geoObjects.add(ballPoint);
+
+                               //return ballPoint;
+
+                } // конец функции AddBalloonPoint
+
+ 
+
+                function calcRoute(options){
+
+                               ymaps.route(options, {
+
+                        // Опции маршрутизатора
+
+                        mapStateAutoApply: true, // автоматически позиционировать карту
+
+                        avoidTrafficJams: true   // Учитывать пробки
+
+                    }).then(
+
+                                   function (router) {
+
+                                   route = router;
+
+                                       myMap.geoObjects.add(route);
+
+                                      
+
+                                       //заполняем и сохраняем инфо про маршрут
+
+                                       document.getElementById('RouteInfo').value = "Длина маршрута - " + route.getHumanLength() + ". Время - " + route.getHumanJamsTime();
+
+                                      
+
+                                       //генерация события для перехвата в 1С
+
+                                       var evt = document.createEventObject();
+
+                                                               document.body.fireEvent('ondatasetcomplete', evt);
+
+                                   },
+
+                                   function (error) {
+
+                                       alert("Возникла ошибка: " + error.message);
+
+                    });
+
+                }
+
+               
+
+                function Reset(){
+
+                               // Удаляем все геообъекты на карте
+
+                               myMap.geoObjects.removeAll();
+
+                                                             
+
+                               PointArray = [];
+
+                               index = 1;
+
+                }
+
+               
+
+                function FindAdres(Adres){
+
+                               Reset();
+
+                               var myGeocoder = ymaps.geocode(Adres);
+
+                               myGeocoder.then(
+
+                                               function (res){
+
+                                               var firstGeoObject = res.geoObjects.get(0);
+
+                                               if(firstGeoObject != null){
+
+                                                               myMap.panTo(
+
+                                                                               // Координаты нового центра карты
+
+                                                                               firstGeoObject.geometry.getCoordinates(), {
+
+                                                                                              /* Опции перемещения:
+
+                                                                                                 разрешить уменьшать и затем увеличивать зум
+
+                                                                                                 карты при перемещении между точками
+
+                                                                                              */
+
+                                                                                              flying: true
+
+                                                                               }
+
+                                                               );
+
+                                                              
+
+                                                               myPlacemark = new ymaps.Placemark(firstGeoObject.geometry.getCoordinates(), {
+
+                                                                               // Свойства
+
+                                                                               // Текст метки
+
+                                                                               iconContent: Adres
+
+                                                               }, {
+
+                                                                              // Опции
+
+                                                                               // Иконка метки будет растягиваться под ее контент
+
+                                                                               preset: 'islands#blueStretchyIcon'
+
+                                                               });
+
+                                                               myMap.geoObjects.add(myPlacemark);
+
+                                               }else{
+
+                                                               alert("Ничего не найдено");}
+
+                                               }
+
+                               );
+
+                }
+
+                              
+
+                function ReverseSearchAdres(CoordX, CoordY, Adres){
+
+                               Reset();
+
+                              
+
+                               var CoordPosition = [CoordX, CoordY];
+
+                               myMap.panTo(
+
+                                   // Координаты нового центра карты
+
+                                   CoordPosition, {
+
+                                       /* Опции перемещения:
+
+                                          разрешить уменьшать и затем увеличивать зум
+
+                                          карты при перемещении между точками
+
+                                       */
+
+                                       flying: true
+
+                                   }
+
+                               );
+
+                              
+
+                               myPlacemark = new ymaps.Placemark(CoordPosition, {
+
+                                               // Свойства
+
+                                               // Текст метки
+
+                                               iconContent: Adres
+
+                               }, {
+
+                                               // Опции
+
+                                               // Иконка метки будет растягиваться под ее контент
+
+                                               preset: 'islands#blueStretchyIcon'
+
+                               });
+
+                               myMap.geoObjects.add(myPlacemark);
+
+                }
+
+               
+
+                function addToPointArray(CoordX, CoordY, ID, Text){
+
+                               var point = new ymaps.GeoObject({
+
+                                   geometry: {type: "Point", coordinates: [CoordX, CoordY]},
+
+                                   properties: {
+
+                                       clusterCaption: ID,
+
+                                       balloonContentBody: Text
+
+                                   }
+
+                                               });
+
+                               PointArray.push(point);
+
+                }
+
+                   
+
+    function WebClientClick() {
+
+               //очистка перед кликом координат, иначе после клика в упр. формах идет считывание координат
+
+               document.getElementById('CoordX').value = "0";
+
+                               document.getElementById('CoordY').value = "0";
+
+              
+
+               var WebClientOperation = document.getElementById("WebClientOperation").value;
+
+                               //alert(WebClientOperation);
+
+                               switch (WebClientOperation) {
+
+               case "0":   // ничего не делаем
+
+                  var a = 1;
+
+               default:   // запускаем функцию
+
+                   eval(WebClientOperation);
+
         }
-    </style>
 
-<script type="text/javascript">
-var myMap;
+        document.getElementById('WebClientOperation').value = "0";
 
-// Дождёмся загрузки API и готовности DOM.
-ymaps.ready(init);
+                }                             
 
-function init () {
-    // Создание экземпляра карты и его привязка к контейнеру с
-    // заданным id ("map").
-    myMap = new ymaps.Map('map', {
-        // При инициализации карты обязательно нужно указать
-        // её центр и коэффициент масштабирования.
-        center: [56.326944, 40.0075], // Нижний Новгород
-        zoom: 12
-    });
-	
-	myMap.behaviors.disable('scrollZoom');
-    
-}
-</script>
+    </script>
+
 </head>
 
+ 
+
 <body>
-<div id="map" style="width: 100%; height: 90%"></div>
+
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&onload=init"  type="text/javascript"></script>
+
+    <div id="map" style="width:100%; height:100%"></div>
+
+    <input type="hidden" id="CoordX" name="CoordX" value="0"></input>
+
+    <input type="hidden" id="CoordY" name="CoordY" value="0"></input>
+
+    <input type="hidden" id="SelectedAddress" name="SelectedAddress" value=""></input>
+
+    <input type="hidden" id="RouteInfo" name="RouteInfo" value=""></input>
+
+    <input type="hidden" id="WebClientOperation" name="WebClientOperation" value="0"></input>
+
+    <input type="hidden" id="WebClient" name="WebClient" onclick="WebClientClick();"></input>
 
 </body>
+
 </html>
